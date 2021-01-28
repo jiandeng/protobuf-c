@@ -196,10 +196,19 @@ size_t foo__bar__baz_bah__pack_to_buffer
 #ifndef PROTOBUF_C_H
 #define PROTOBUF_C_H
 
-#include <assert.h>
 #include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
+#ifndef ASSERT_PBUF
+#include <assert.h>
+#else
+void assert_pbuf_callback(uint16_t line_num, const uint8_t * p_file_name);
+#define assert(exp)                             \
+    if(!(exp)) {                                \
+        assert_pbuf_callback(__LINE__, NULL);   \
+    }
+#endif
+
 
 #ifdef __cplusplus
 # define PROTOBUF_C__BEGIN_DECLS	extern "C" {
